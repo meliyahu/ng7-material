@@ -169,6 +169,9 @@ export class TreeChecklistExampleComponent implements OnInit {
 
   /** Whether all the descendants of the node are selected. */
   descendantsAllSelected(node: TodoItemFlatNode): boolean {
+
+    console.log("in descendantsAllSelected. node is:", node);
+    
     const descendants = this.treeControl.getDescendants(node);
     const descAllSelected = descendants.every(child =>
       this.checklistSelection.isSelected(child)
@@ -185,6 +188,9 @@ export class TreeChecklistExampleComponent implements OnInit {
 
   /** Toggle the to-do item selection. Select/deselect all the descendants node */
   todoItemSelectionToggle(node: TodoItemFlatNode): void {
+    
+    console.log('in todoItemSelectionToggle. Node is:', node);
+
     this.checklistSelection.toggle(node);
     const descendants = this.treeControl.getDescendants(node);
     this.checklistSelection.isSelected(node)
