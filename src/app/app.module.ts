@@ -8,11 +8,15 @@ import { TreeDynamicExampleComponent } from './components/tree-dynamic-example/t
 import {MatTreeModule} from '@angular/material/tree';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { TreeChecklistExampleComponent } from './components/tree-checklist-example/tree-checklist-example.component';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TreeDynamicExampleComponent
+    TreeDynamicExampleComponent,
+    TreeChecklistExampleComponent
   ],
   imports: [
     BrowserModule,
@@ -20,7 +24,9 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     BrowserAnimationsModule,
     MatTreeModule,
     MatIconModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatCheckboxModule,
+    MatFormFieldModule
   ],
   providers: [],
   bootstrap: [AppComponent]
