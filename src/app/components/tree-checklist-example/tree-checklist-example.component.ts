@@ -3,6 +3,7 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
 import {BehaviorSubject} from 'rxjs';
+import { LookupService } from '../../services/lookup.service';
 
 
 /**
@@ -24,15 +25,10 @@ export class TodoItemFlatNode {
  * The Json object for to-do list data.
  */
 const TREE_DATA = {
-  Groceries: {
-    'Almond Meal flour': null,
-    'Organic eggs': null,
-    'Protein Powder': null,
-    Fruits: {
-      Apple: null,
-      Berries: ['Blueberry', 'Raspberry'],
-      Orange: null
-    }
+  Geology: {
+    Reliability: ['Medium', 'Low'],
+    Source: ['Outcrop', 'Map', 'Cutting', 'Core'],
+    Type: ['sand', 'sandstone', 'silt, clay', 'siltstone', 'laterite', 'basalt', 'rhyolite', 'granite', 'traprock, metasediments', 'basic sandstone', 'andesite', 'serpentinite', 'diorite', 'syenite', 'phyllite', 'gneiss', 'silcrete', 'undifferentiated volcanic', 'greenstone', 'limestone', 'trachyte', 'undifferentiated intrusive', 'dolerite', 'peat', 'quartz schist', 'ironstone']
   },
   Reminders: [
     'Cook dinner',
@@ -130,7 +126,7 @@ export class TreeChecklistExampleComponent implements OnInit {
   /** The selection for checklist */
   checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
 
-  constructor(private database: ChecklistDatabase) {
+  constructor(private database: ChecklistDatabase, private lookupService:LookupService) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
       this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
@@ -267,6 +263,12 @@ export class TreeChecklistExampleComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getGeologyLookUp()
   }
 
+  getGeologyLookUp(){
+    this.lookupService.getGeologyLookUp().subscribe(res => {
+       console.log(res)
+    });
+  }
 }

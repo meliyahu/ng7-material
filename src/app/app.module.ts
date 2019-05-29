@@ -11,6 +11,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { TreeChecklistExampleComponent } from './components/tree-checklist-example/tree-checklist-example.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -25,8 +26,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     MatTreeModule,
     MatIconModule,
     MatProgressBarModule,
-    MatCheckboxModule,
-    MatFormFieldModule
+    MatCheckboxModule,  
+    MatFormFieldModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
