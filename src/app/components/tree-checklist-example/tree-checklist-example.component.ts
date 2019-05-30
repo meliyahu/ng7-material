@@ -24,19 +24,19 @@ export class TodoItemFlatNode {
 /**
  * The Json object for to-do list data.
  */
-const TREE_DATA = {
-  Geology: {
-    Reliability: ['Medium', 'Low'],
-    Source: ['Outcrop', 'Map', 'Cutting', 'Core'],
-    Type: ['sand', 'sandstone', 'silt, clay', 'siltstone', 'laterite', 'basalt', 'rhyolite', 'granite', 'traprock, metasediments', 'basic sandstone', 'andesite', 'serpentinite', 'diorite', 'syenite', 'phyllite', 'gneiss', 'silcrete', 'undifferentiated volcanic', 'greenstone', 'limestone', 'trachyte', 'undifferentiated intrusive', 'dolerite', 'peat', 'quartz schist', 'ironstone']
-  },
-  Reminders: [
-    'Cook dinner',
-    'Read the Material Design spec',
-    'Upgrade Application to Angular'
-  ]
-};
-
+// const TREE_DATA = {
+//   Geology: {
+//     Reliability: ['Medium', 'Low'],
+//     Procedure: ['Outcrop', 'Map', 'Cutting', 'Core'],
+//     Type: ['sand', 'sandstone', 'silt, clay', 'siltstone', 'laterite', 'basalt', 'rhyolite', 'granite', 'traprock, metasediments', 'basic sandstone', 'andesite', 'serpentinite', 'diorite', 'syenite', 'phyllite', 'gneiss', 'silcrete', 'undifferentiated volcanic', 'greenstone', 'limestone', 'trachyte', 'undifferentiated intrusive', 'dolerite', 'peat', 'quartz schist', 'ironstone']
+//   }
+//   // Reminders: [
+//   //   'Cook dinner',
+//   //   'Read the Material Design spec',
+//   //   'Upgrade Application to Angular'
+//   // ]
+// };
+ 
 /**
  * Checklist database, it can build a tree structured Json object.
  * Each node in Json object represents a to-do item or a category.
@@ -46,21 +46,42 @@ const TREE_DATA = {
 export class ChecklistDatabase {
   dataChange = new BehaviorSubject<TodoItemNode[]>([]);
 
-  get data(): TodoItemNode[] { return this.dataChange.value; }
+  get data(): TodoItemNode[] { 
+    return this.dataChange.value; 
+  }
 
-  constructor() {
+  constructor(private lookupService: LookupService) {
     this.initialize();
   }
 
   initialize() {
     // Build the tree nodes from Json object. The result is a list of `TodoItemNode` with nested
     //     file node as children.
-    const data = this.buildFileTree(TREE_DATA, 0);
-
+    // const data = this.buildFileTree(TREE_DATA, 0);
     // Notify the change.
-    this.dataChange.next(data);
+    //this.dataChange.next(data);
+    this.getGeologyLookup();
   }
 
+  getGeologyLookup(){
+    let my_data = {}
+    this.lookupService.getGeologyLookUp().subscribe(tree_data => {
+      tree_data["Mosheh"] = ['Cook dinner','Read the Material Design spec','Upgrade Application to Angular'];
+      console.log("this.tree_data: ", tree_data)
+      // const data = this.buildFileTree(tree_data, 0);
+      let my_soil = {
+        Soil: {
+          Soiltype: ['mud', 'dry', 'sandy'],
+          SoilLocation: ['hill', 'flat land', 'rocky outcrop', 'between trees']
+        }
+      }
+      tree_data = {...tree_data, my_soil}
+      const data = this.buildFileTree(tree_data, 0);
+      // Notify the change.
+     this.dataChange.next(data);
+   
+    });
+  }
   /**
    * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
    * The return value is the list of `TodoItemNode`.
@@ -126,7 +147,7 @@ export class TreeChecklistExampleComponent implements OnInit {
   /** The selection for checklist */
   checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
 
-  constructor(private database: ChecklistDatabase, private lookupService:LookupService) {
+  constructor(private database: ChecklistDatabase) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
       this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
@@ -263,12 +284,7 @@ export class TreeChecklistExampleComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getGeologyLookUp()
+  
   }
 
-  getGeologyLookUp(){
-    this.lookupService.getGeologyLookUp().subscribe(res => {
-       console.log(res)
-    });
-  }
 }
