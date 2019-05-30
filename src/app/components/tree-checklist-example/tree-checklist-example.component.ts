@@ -158,6 +158,13 @@ export class TreeChecklistExampleComponent implements OnInit {
     });
   }
 
+  isMyChecked(node: any){
+    console.log("node is: ", node)
+    let checked = this.checklistSelection.isSelected(node)
+    console.log("ischecked: ", checked)
+    return checked;
+
+  }
   getLevel = (node: TodoItemFlatNode) => node.level;
 
   isExpandable = (node: TodoItemFlatNode) => node.expandable;
@@ -187,12 +194,15 @@ export class TreeChecklistExampleComponent implements OnInit {
   /** Whether all the descendants of the node are selected. */
   descendantsAllSelected(node: TodoItemFlatNode): boolean {
 
-    console.log("in descendantsAllSelected. node is:", node);
+    // console.log("in descendantsAllSelected. node is:", node);
     
     const descendants = this.treeControl.getDescendants(node);
     const descAllSelected = descendants.every(child =>
       this.checklistSelection.isSelected(child)
     );
+    //console.log("Selected Node: ", node.item, descAllSelected);
+    // console.log("descAllSelected: ", descAllSelected);
+
     return descAllSelected;
   }
 
@@ -206,18 +216,24 @@ export class TreeChecklistExampleComponent implements OnInit {
   /** Toggle the to-do item selection. Select/deselect all the descendants node */
   todoItemSelectionToggle(node: TodoItemFlatNode): void {
     
-    console.log('in todoItemSelectionToggle. Node is:', node);
+    //console.log('in todoItemSelectionToggle. Node is:', node);
 
     this.checklistSelection.toggle(node);
     const descendants = this.treeControl.getDescendants(node);
+    
+    //console.log('descendants=', descendants);
+    
     this.checklistSelection.isSelected(node)
       ? this.checklistSelection.select(...descendants)
       : this.checklistSelection.deselect(...descendants);
 
     // Force update for the parent
-    descendants.every(child =>
+    descendants.every(child => 
       this.checklistSelection.isSelected(child)
     );
+
+    console.log('this.checklistSelection=', this.checklistSelection);
+
     this.checkAllParentsSelection(node);
   }
 
@@ -270,19 +286,21 @@ export class TreeChecklistExampleComponent implements OnInit {
     return null;
   }
 
-  /** Select the category so we can insert the new item. */
-  addNewItem(node: TodoItemFlatNode) {
-    const parentNode = this.flatNodeMap.get(node);
-    this.database.insertItem(parentNode!, '');
-    this.treeControl.expand(node);
-  }
+  // /** Select the category so we can insert the new item. */
+  // addNewItem(node: TodoItemFlatNode) {
+  //   const parentNode = this.flatNodeMap.get(node);
+  //   this.database.insertItem(parentNode!, '');
+  //   this.treeControl.expand(node);
+  // }
 
-  /** Save the node to database */
-  saveNode(node: TodoItemFlatNode, itemValue: string) {
-    const nestedNode = this.flatNodeMap.get(node);
-    this.database.updateItem(nestedNode!, itemValue);
+  // /** Save the node to database */
+  // saveNode(node: TodoItemFlatNode, itemValue: string) {
+  //   const nestedNode = this.flatNodeMap.get(node);
+  //   this.database.updateItem(nestedNode!, itemValue);
+  // }
+  testing(event){
+    console.log("Clicked:", event);
   }
-
   ngOnInit() {
   
   }
