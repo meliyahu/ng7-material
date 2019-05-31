@@ -38,11 +38,11 @@ export class ChecklistDatabase {
         treeData = {...treeData,...element}
       });
 
-      console.log('treeData =', treeData);
+      // console.log('treeData =', treeData);
 
       const data = this.buildFileTree(treeData, 0, undefined);
 
-      console.log('data=', data);
+      // console.log('data=', data);
 
       // Notify the change.
      this.dataChange.next(data);
@@ -133,13 +133,14 @@ export class TreeChecklistExampleComponent implements OnInit {
     });
   }
 
-  isNodeChecked(node: any){
-    //console.log("node is: ", node)
-    let checked = this.checklistSelection.isSelected(node);
-    node.isSelected = checked;
+  isNodeSelected(node: any){
+    //console.log("in isNodeSelected. Node is: ", node)
+    let selected = this.checklistSelection.isSelected(node);
+    node.isSelected = selected;
     //console.log("ischecked: ", checked)
     this.manageSelectedNodes(node);
-    return checked;
+
+    return selected;
 
   }
   getLevel = (node: ThemeItemFlatNode) => node.level;
@@ -173,14 +174,17 @@ export class TreeChecklistExampleComponent implements OnInit {
   /** Whether all the descendants of the node are selected. */
   descendantsAllSelected(node: ThemeItemFlatNode): boolean {
 
-    // console.log("in descendantsAllSelected. node is:", node);
+    //console.log("in descendantsAllSelected. node is:", node);
     
     const descendants = this.treeControl.getDescendants(node);
     const descAllSelected = descendants.every(child =>
       this.checklistSelection.isSelected(child)
     );
-    //console.log("Selected Node: ", node.item, descAllSelected);
-    // console.log("descAllSelected: ", descAllSelected);
+    
+    //Make sure descendants are tracked if they are selected
+    descendants.forEach(descendant => {
+      this.isNodeSelected(descendant);
+    })
 
     return descAllSelected;
   }
@@ -192,10 +196,10 @@ export class TreeChecklistExampleComponent implements OnInit {
     return result && !this.descendantsAllSelected(node);
   }
 
-  /** Toggle the to-do item selection. Select/deselect all the descendants node */
-  todoItemSelectionToggle(node: ThemeItemFlatNode): void {
+  /** Toggle the theme item selection. Select/deselect all the descendants node */
+  themeItemSelectionToggle(node: ThemeItemFlatNode): void {
     
-    //console.log('in todoItemSelectionToggle. Node is:', node);
+    //console.log('in themeItemSelectionToggle. Node is:', node);
 
     this.checklistSelection.toggle(node);
     const descendants = this.treeControl.getDescendants(node);
@@ -216,8 +220,8 @@ export class TreeChecklistExampleComponent implements OnInit {
     this.checkAllParentsSelection(node);
   }
 
-  /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
-  todoLeafItemSelectionToggle(node: ThemeItemFlatNode): void {
+  /** Toggle a leaf theme item selection. Check all the parents to see if they changed */
+  themeLeafItemSelectionToggle(node: ThemeItemFlatNode): void {
     this.checklistSelection.toggle(node);
     this.checkAllParentsSelection(node);
   }
@@ -265,13 +269,14 @@ export class TreeChecklistExampleComponent implements OnInit {
     return null;
   }
 
+  /** Keep track of selected nodes */
   manageSelectedNodes(node: ThemeItemFlatNode){
        if (node.isSelected == true){
          this.currentSelectedNodes.add(node);
        } else {
          this.currentSelectedNodes.delete(node);
        }
-       console.log('currentSelectedNodes: ', this.currentSelectedNodes);
+       //console.log('currentSelectedNodes: ', this.currentSelectedNodes);
   }
   
   ngOnInit() {
