@@ -20,6 +20,8 @@ export class TodoItemFlatNode {
   item: string;
   level: number;
   expandable: boolean;
+  isSelected: boolean;
+  parent: string;
 }
  
 /**
@@ -149,7 +151,8 @@ export class TreeChecklistExampleComponent implements OnInit {
 
   isMyChecked(node: any){
     console.log("node is: ", node)
-    let checked = this.checklistSelection.isSelected(node)
+    let checked = this.checklistSelection.isSelected(node);
+    node.isSelected = checked;
     console.log("ischecked: ", checked)
     return checked;
 
@@ -175,6 +178,8 @@ export class TreeChecklistExampleComponent implements OnInit {
     flatNode.item = node.item;
     flatNode.level = level;
     flatNode.expandable = !!node.children;
+    flatNode.parent = node.parent;
+    flatNode.isSelected = false;
     this.flatNodeMap.set(flatNode, node);
     this.nestedNodeMap.set(node, flatNode);
     return flatNode;
