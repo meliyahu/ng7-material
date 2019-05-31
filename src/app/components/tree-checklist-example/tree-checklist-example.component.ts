@@ -4,26 +4,8 @@ import {FlatTreeControl} from '@angular/cdk/tree';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
 import {BehaviorSubject} from 'rxjs';
 import { LookupService } from '../../services/lookup.service';
+import { ThemeItemNode, ThemeItemFlatNode } from '../../models/theme-item-node';
 
-
-/**
- * Node for to-do item
- */
-export class ThemeItemNode {
-  parent: string;
-  children: ThemeItemNode[];
-  item: string;
-}
-
-/** Flat to-do item node with expandable and level information */
-export class ThemeItemFlatNode {
-  item: string;
-  level: number;
-  expandable: boolean;
-  isSelected: boolean;
-  parent: string;
-}
- 
 /**
  * Checklist database, it can build a tree structured Json object.
  * Each node in Json object represents a to-do item or a category.
@@ -137,6 +119,8 @@ export class TreeChecklistExampleComponent implements OnInit {
 
   /** The selection for checklist */
   checklistSelection = new SelectionModel<ThemeItemFlatNode>(true /* multiple */);
+
+  currentSelectedNodes = null;
 
   constructor(private database: ChecklistDatabase) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
