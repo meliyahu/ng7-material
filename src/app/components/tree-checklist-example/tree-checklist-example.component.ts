@@ -56,14 +56,14 @@ export class ChecklistDatabase {
   buildFileTree(obj: {[key: string]: any}, level: number, parent?:string): ThemeItemNode[] {
     return Object.keys(obj).reduce<ThemeItemNode[]>((accumulator, key) => {
       
-      console.log('key=', key);
+      // console.log('key=', key);
 
       const value = obj[key];
       const node = new ThemeItemNode();
       node.item = key;
       node.parent = parent?parent:undefined;
 
-      console.log('value=', value);
+      // console.log('value=', value);
       
       if (value != null) {
         if (typeof value === 'object') {
@@ -120,7 +120,7 @@ export class TreeChecklistExampleComponent implements OnInit {
   /** The selection for checklist */
   checklistSelection = new SelectionModel<ThemeItemFlatNode>(true /* multiple */);
 
-  currentSelectedNodes = null;
+  currentSelectedNodes = new Set();
 
   constructor(private database: ChecklistDatabase) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
@@ -134,10 +134,11 @@ export class TreeChecklistExampleComponent implements OnInit {
   }
 
   isNodeChecked(node: any){
-    console.log("node is: ", node)
+    //console.log("node is: ", node)
     let checked = this.checklistSelection.isSelected(node);
     node.isSelected = checked;
-    console.log("ischecked: ", checked)
+    //console.log("ischecked: ", checked)
+    this.manageSelectedNodes(node);
     return checked;
 
   }
@@ -210,7 +211,7 @@ export class TreeChecklistExampleComponent implements OnInit {
       this.checklistSelection.isSelected(child)
     );
 
-    console.log('this.checklistSelection=', this.checklistSelection);
+    // console.log('this.checklistSelection=', this.checklistSelection);
 
     this.checkAllParentsSelection(node);
   }
@@ -264,18 +265,14 @@ export class TreeChecklistExampleComponent implements OnInit {
     return null;
   }
 
-  // /** Select the category so we can insert the new item. */
-  // addNewItem(node: ThemeItemFlatNode) {
-  //   const parentNode = this.flatNodeMap.get(node);
-  //   this.database.insertItem(parentNode!, '');
-  //   this.treeControl.expand(node);
-  // }
-
-  // /** Save the node to database */
-  // saveNode(node: ThemeItemFlatNode, itemValue: string) {
-  //   const nestedNode = this.flatNodeMap.get(node);
-  //   this.database.updateItem(nestedNode!, itemValue);
-  // }
+  manageSelectedNodes(node: ThemeItemFlatNode){
+       if (node.isSelected == true){
+         this.currentSelectedNodes.add(node);
+       } else {
+         this.currentSelectedNodes.delete(node);
+       }
+       console.log('currentSelectedNodes: ', this.currentSelectedNodes);
+  }
   
   ngOnInit() {
   
