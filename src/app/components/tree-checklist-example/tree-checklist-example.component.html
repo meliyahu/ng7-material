@@ -3,16 +3,16 @@
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
     <button mat-icon-button disabled></button>
     <mat-checkbox class="checklist-leaf-node"
-                  [checked]="isMyChecked(node)"
+                  [checked]="isNodeChecked(node)"
                   (change)="todoLeafItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
   </mat-tree-node>
 
   <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
     <button mat-icon-button disabled></button>
-    <mat-form-field>
+    <!-- <mat-form-field>
       <input matInput #itemValue placeholder="New item...">
-    </mat-form-field>
-    <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>
+    </mat-form-field> -->
+    <!-- <button mat-button (click)="saveNode(node, itemValue.value)">Save</button> -->
   </mat-tree-node>
 
   <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>

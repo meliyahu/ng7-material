@@ -22,6 +22,6 @@ export class LookupService {
     // let response9 = of({'Disturbance': ['Fire', 'Storm', 'Road Works', 'Salinity', 'Grazing', 'Erosion', 'Logging']});
   
     // return forkJoin(response1, response2, response3, response4, response5, response6, response7, response8, response9);
-    return forkJoin(response2, response3, responseXX);
+    return forkJoin(response2);
   }
 }
