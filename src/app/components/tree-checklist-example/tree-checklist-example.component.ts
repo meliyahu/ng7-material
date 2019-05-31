@@ -10,6 +10,7 @@ import { LookupService } from '../../services/lookup.service';
  * Node for to-do item
  */
 export class TodoItemNode {
+  parent: string;
   children: TodoItemNode[];
   item: string;
 }
@@ -41,9 +42,6 @@ export class ChecklistDatabase {
   initialize() {
     // Build the tree nodes from Json object. The result is a list of `TodoItemNode` with nested
     //     file node as children.
-    // const data = this.buildFileTree(TREE_DATA, 0);
-    // Notify the change.
-    //this.dataChange.next(data);
     this.getGeologyLookup();
   }
 
@@ -56,7 +54,11 @@ export class ChecklistDatabase {
         treeData = {...treeData,...element}
       });
 
-      const data = this.buildFileTree(treeData, 0);
+      console.log('treeData =', treeData);
+
+      const data = this.buildFileTree(treeData, 0, undefined);
+
+      console.log('data=', data);
 
       // Notify the change.
      this.dataChange.next(data);
@@ -67,15 +69,21 @@ export class ChecklistDatabase {
    * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
    * The return value is the list of `TodoItemNode`.
    */
-  buildFileTree(obj: {[key: string]: any}, level: number): TodoItemNode[] {
+  buildFileTree(obj: {[key: string]: any}, level: number, parent?:string): TodoItemNode[] {
     return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {
+      
+      console.log('key=', key);
+
       const value = obj[key];
       const node = new TodoItemNode();
       node.item = key;
+      node.parent = parent?parent:undefined;
 
+      console.log('value=', value);
+      
       if (value != null) {
         if (typeof value === 'object') {
-          node.children = this.buildFileTree(value, level + 1);
+          node.children = this.buildFileTree(value, level + 1, node.item);
         } else {
           node.item = value;
         }
@@ -85,18 +93,18 @@ export class ChecklistDatabase {
     }, []);
   }
 
-  /** Add an item to to-do list */
-  insertItem(parent: TodoItemNode, name: string) {
-    if (parent.children) {
-      parent.children.push({item: name} as TodoItemNode);
-      this.dataChange.next(this.data);
-    }
-  }
+  // /** Add an item to to-do list */
+  // insertItem(parent: TodoItemNode, name: string) {
+  //   if (parent.children) {
+  //     parent.children.push({item: name} as TodoItemNode);
+  //     this.dataChange.next(this.data);
+  //   }
+  // }
 
-  updateItem(node: TodoItemNode, name: string) {
-    node.item = name;
-    this.dataChange.next(this.data);
-  }
+  // updateItem(node: TodoItemNode, name: string) {
+  //   node.item = name;
+  //   this.dataChange.next(this.data);
+  // }
 }
 
 @Component({
