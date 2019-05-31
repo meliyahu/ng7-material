@@ -20,22 +20,6 @@ export class TodoItemFlatNode {
   level: number;
   expandable: boolean;
 }
-
-/**
- * The Json object for to-do list data.
- */
-// const TREE_DATA = {
-//   Geology: {
-//     Reliability: ['Medium', 'Low'],
-//     Procedure: ['Outcrop', 'Map', 'Cutting', 'Core'],
-//     Type: ['sand', 'sandstone', 'silt, clay', 'siltstone', 'laterite', 'basalt', 'rhyolite', 'granite', 'traprock, metasediments', 'basic sandstone', 'andesite', 'serpentinite', 'diorite', 'syenite', 'phyllite', 'gneiss', 'silcrete', 'undifferentiated volcanic', 'greenstone', 'limestone', 'trachyte', 'undifferentiated intrusive', 'dolerite', 'peat', 'quartz schist', 'ironstone']
-//   }
-//   // Reminders: [
-//   //   'Cook dinner',
-//   //   'Read the Material Design spec',
-//   //   'Upgrade Application to Angular'
-//   // ]
-// };
  
 /**
  * Checklist database, it can build a tree structured Json object.
@@ -64,19 +48,16 @@ export class ChecklistDatabase {
   }
 
   getGeologyLookup(){
-    let my_data = {}
-    this.lookupService.getGeologyLookUp().subscribe(tree_data => {
-      tree_data["Mosheh"] = ['Cook dinner','Read the Material Design spec','Upgrade Application to Angular'];
-      console.log("this.tree_data: ", tree_data)
-      // const data = this.buildFileTree(tree_data, 0);
-      let my_soil = {
-        Soil: {
-          Soiltype: ['mud', 'dry', 'sandy'],
-          SoilLocation: ['hill', 'flat land', 'rocky outcrop', 'between trees']
-        }
-      }
-      tree_data = {...tree_data, my_soil}
-      const data = this.buildFileTree(tree_data, 0);
+
+    this.lookupService.getGeologyLookUp().subscribe(responseList => {
+      
+      let treeData = {}; 
+      responseList.forEach(element => {
+        treeData = {...treeData,...element}
+      });
+
+      const data = this.buildFileTree(treeData, 0);
+
       // Notify the change.
      this.dataChange.next(data);
    
